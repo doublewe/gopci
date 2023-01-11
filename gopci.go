@@ -37,6 +37,7 @@ func NewPCI() (*PCI, error) {
 func (p *PCI) GetDevicesByHex() map[string][]*device {
 	m := make(map[string][]*device)
 	for _, d := range p.devices {
+		fmt.Println(d.Address.Hex())
 		m[d.Class.Hex] = append(m[d.Class.Hex], (*device)(d))
 	}
 
@@ -48,6 +49,17 @@ func (p *PCI) GetDeviceByClassName(className string) []*device {
 	for classHex, d := range p.GetDevicesByHex() {
 		if name, ok := subclassName[classHex]; ok && name == className {
 			return d
+		}
+	}
+
+	return nil
+}
+
+// GetDeviceBySlot 根据slot获取device
+func (p *PCI) GetDeviceBySlot(slot string) *device {
+	for _, d := range p.devices {
+		if d.Address.Hex() == slot {
+			return (*device)(d)
 		}
 	}
 
