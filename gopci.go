@@ -74,15 +74,20 @@ func (p *PCI) GetSubclassName() map[string]string {
 	classNameM := make(map[string]string)
 	for _, devClass := range p.pcidbData.Classes {
 		for _, devSubclass := range devClass.Subclasses {
+			setZero := true
 			if len(devSubclass.ProgrammingInterfaces) != 0 {
 				for _, progIface := range devSubclass.ProgrammingInterfaces {
+					if progIface.ID == "00" {
+						setZero = false
+					}
 					hex := fmt.Sprintf("0x%s%s%s", devClass.ID, devSubclass.ID, progIface.ID)
 					classNameM[hex] = progIface.Name
 				}
-			} else {
+			}
+
+			if len(devSubclass.ProgrammingInterfaces) == 0 || setZero {
 				hex := fmt.Sprintf("0x%s%s00", devClass.ID, devSubclass.ID)
 				classNameM[hex] = devSubclass.Name
-
 			}
 		}
 	}
