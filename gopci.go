@@ -37,7 +37,6 @@ func NewPCI() (*PCI, error) {
 func (p *PCI) GetDevicesByHex() map[string][]*device {
 	m := make(map[string][]*device)
 	for _, d := range p.devices {
-		fmt.Println(d.Address.Hex())
 		m[d.Class.Hex] = append(m[d.Class.Hex], (*device)(d))
 	}
 
